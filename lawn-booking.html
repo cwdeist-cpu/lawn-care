@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lawn Care — Instant Quote & Booking</title>
+  <style>
+    /* =============================================
+       RESET & BASE
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    :root {
+      --green-900: #14321e;
+      --green-800: #1a4731;
+      --green-700: #2d6a4f;
+      --green-600: #3a8563;
+      --green-400: #52b788;
+      --green-200: #95d5b2;
+      --green-100: #d8f3dc;
+      --green-50:  #f0f9f4;
+      --yellow:     #f9c74f;
+      --yellow-dk:  #d4a017;
+      --white:      #ffffff;
+      --gray-50:    #f8f9fa;
+      --gray-100:   #f1f3f4;
+      --gray-200:   #e2e6ea;
+      --gray-400:   #b0bec5;
+      --gray-600:   #607d8b;
+      --gray-800:   #37474f;
+      --red:        #e53935;
+      --text:       #1b2e1b;
+      --text-mid:   #3a5440;
+      --radius-lg:  14px;
+      --radius:     10px;
+      --radius-sm:  7px;
+      --shadow-sm:  0 1px 4px rgba(0,0,0,.07);
+      --shadow:     0 3px 12px rgba(0,0,0,.09);
+      --shadow-lg:  0 8px 28px rgba(0,0,0,.12);
+      --ease:       0.2s cubic-bezier(.4,0,.2,1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                   'Helvetica Neue', Arial, sans-serif;
+      background: var(--green-50);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    .hero {
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(149,213,178,.25) 0%, transparent 55%),
+        linear-gradient(155deg, var(--green-900) 0%, var(--green-700) 55%, var(--green-600) 100%);
+      color: #fff;
+      padding: 52px 24px 68px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative leaf rings */
+    .hero-decor {
+      position: absolute;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.08);
+      pointer-events: none;
+    }
+    .hero-decor-1 { width: 420px; height: 420px; top: -180px; right: -120px; }
+    .hero-decor-2 { width: 280px; height: 280px; bottom: -60px; left: -80px; }
+
+    /* SVG grass wave at bottom of hero */
+    .hero-wave {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      line-height: 0;
+    }
+    .hero-wave svg { display: block; width: 100%; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--yellow);
+      color: var(--green-900);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 6vw, 44px);
+      font-weight: 900;
+      letter-spacing: -.025em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 span { color: var(--yellow); }
+
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 17px);
+      opacity: .85;
+      max-width: 420px;
+      margin: 0 auto 24px;
+    }
+
+    .hero-pills {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 13px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* =============================================
+       PAGE GRID
+    ============================================= */
+    .page-wrap {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 32px 16px 80px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 760px) {
+      .page-wrap {
+        padding: 40px 24px 80px;
+      }
+    }
+
+    .form-col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* =============================================
+       CARDS / SECTIONS
+    ============================================= */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+    }
+
+    .card-head {
+      padding: 18px 22px 14px;
+      border-bottom: 1px solid var(--gray-100);
+      display: flex;
+      align-items: flex-start;
+      gap: 13px;
+    }
+
+    .step-badge {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--green-700);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    .card-head-text {}
+    .card-title   { font-size: 16px; font-weight: 750; color: var(--text); }
+    .card-sub     { font-size: 12.5px; color: var(--gray-600); margin-top: 1px; }
+    .card-body    { padding: 20px 22px 24px; }
+
+    /* =============================================
+       FIELD INPUTS
+    ============================================= */
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .field-row .span2 { grid-column: 1 / -1; }
+    @media (max-width: 460px) { .field-row { grid-template-columns: 1fr; } }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .field label {
+      font-size: 13px;
+      font-weight: 650;
+      color: var(--text-mid);
+    }
+    .req { color: var(--green-400); margin-left: 2px; }
+
+    input[type=text], input[type=email], input[type=tel],
+    input[type=date], select, textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color var(--ease), box-shadow var(--ease);
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(82,183,136,.16);
+    }
+    input.err, select.err, textarea.err {
+      border-color: var(--red);
+    }
+    textarea { resize: vertical; min-height: 78px; }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23607d8b' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    /* =============================================
+       SELECTION CARDS (radio / checkbox)
+    ============================================= */
+    .sel-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .g2  { grid-template-columns: 1fr 1fr; }
+    .g3  { grid-template-columns: repeat(3, 1fr); }
+    @media (max-width: 520px) { .g3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 340px) { .g2, .g3 { grid-template-columns: 1fr; } }
+
+    .sel-card { position: relative; cursor: pointer; }
+    .sel-card input { position: absolute; opacity: 0; pointer-events: none; }
+
+    .sel-face {
+      border: 2px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 13px 14px;
+      background: var(--white);
+      transition: border-color var(--ease), background var(--ease), box-shadow var(--ease);
+      height: 100%;
+      position: relative;
+    }
+    .sel-card:hover .sel-face {
+      border-color: var(--green-400);
+      background: var(--green-50);
+    }
+    .sel-card input:checked ~ .sel-face {
+      border-color: var(--green-700);
+      background: #edf7f1;
+      box-shadow: 0 0 0 1px var(--green-700);
+    }
+    .sel-card input:disabled ~ .sel-face {
+      opacity: .55;
+      cursor: not-allowed;
+      background: var(--gray-50);
+    }
+    .sel-card input:disabled ~ .sel-face:hover {
+      border-color: var(--gray-200);
+      background: var(--gray-50);
+    }
+
+    /* Checkmark dot */
+    .sel-dot {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--green-700);
+      color: #fff;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(.5);
+      transition: opacity var(--ease), transform var(--ease);
+    }
+    .sel-card.checkbox .sel-dot { border-radius: 5px; }
+    .sel-card input:checked ~ .sel-face .sel-dot {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .sel-label { font-size: 14px; font-weight: 700; color: var(--text); }
+    .sel-desc  { font-size: 12px; color: var(--gray-600); margin-top: 2px; line-height: 1.4; }
+    .sel-price {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--green-700);
+      margin-top: 8px;
+      letter-spacing: -.02em;
+    }
+    .sel-price-note { font-size: 11px; font-weight: 400; color: var(--gray-600); }
+
+    /* Save badge */
+    .save-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--green-900);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 10px;
+      margin-top: 5px;
+    }
+
+    /* Call-for-quote badge */
+    .call-badge {
+      display: inline-block;
+      background: #fff8e1;
+      color: var(--yellow-dk);
+      border: 1px solid var(--yellow);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      margin-top: 6px;
+    }
+
+    /* Service card specifics */
+    .svc-includes {
+      list-style: none;
+      margin-top: 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .svc-includes li {
+      font-size: 11.5px;
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .svc-includes li::before {
+      content: '';
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      background: var(--green-100);
+      border-radius: 50%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3 7l3 3 5-5' stroke='%232d6a4f' stroke-width='1.6' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: 10px;
+      background-repeat: no-repeat;
+      background-position: center;
+      flex-shrink: 0;
+    }
+
+    /* Addon card specifics */
+    .addon-face {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 12px 14px;
+    }
+    .addon-icon { font-size: 24px; line-height: 1; flex-shrink: 0; }
+    .addon-info { flex: 1; min-width: 0; }
+    .addon-price {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--green-700);
+      white-space: nowrap;
+    }
+
+    /* Frequency card center-align */
+    .freq-face { text-align: center; padding: 14px 10px; }
+
+    /* XL notice banner */
+    .xl-banner {
+      display: none;
+      align-items: flex-start;
+      gap: 11px;
+      background: #fffde7;
+      border: 1.5px solid var(--yellow);
+      border-radius: var(--radius);
+      padding: 13px 16px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #5a4000;
+      line-height: 1.5;
+    }
+    .xl-banner.show { display: flex; }
+    .xl-banner-icon { font-size: 22px; flex-shrink: 0; line-height: 1; }
+
+    /* Validation errors */
+    .field-err {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 4px;
+    }
+
+    /* =============================================
+       PRICE PANEL
+    ============================================= */
+.price-panel {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      border: 1.5px solid var(--green-200);
+      overflow: hidden;
+    }
+
+    .price-head {
+      background: linear-gradient(140deg, var(--green-900) 0%, var(--green-700) 100%);
+      padding: 20px 22px;
+      color: #fff;
+    }
+    .price-head-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      opacity: .75;
+      margin-bottom: 4px;
+    }
+    .price-amount {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -.03em;
+      line-height: 1;
+      transition: all var(--ease);
+    }
+    .price-amount.muted {
+      font-size: 18px;
+      font-weight: 400;
+      opacity: .6;
+      font-style: italic;
+      letter-spacing: 0;
+    }
+    .price-per-visit {
+      font-size: 13px;
+      opacity: .75;
+      margin-top: 4px;
+      min-height: 20px;
+    }
+
+    .price-body { padding: 16px 20px 20px; }
+
+    .price-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      font-size: 13.5px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .price-line:last-child { border-bottom: none; }
+    .pl-label { color: var(--gray-600); }
+    .pl-val   { font-weight: 700; color: var(--text); }
+    .pl-val.disc { color: var(--red); }
+    .pl-val.add  { color: var(--green-600); }
+
+    .price-placeholder {
+      text-align: center;
+      padding: 16px 0 8px;
+      font-size: 13.5px;
+      color: var(--gray-600);
+      font-style: italic;
+    }
+
+    .price-divider {
+      height: 1px;
+      background: var(--gray-100);
+      margin: 4px 0;
+    }
+
+    .price-confirm {
+      display: flex;
+      gap: 9px;
+      background: var(--green-50);
+      border-radius: var(--radius-sm);
+      padding: 12px 13px;
+      font-size: 12.5px;
+      color: var(--text-mid);
+      line-height: 1.5;
+      margin-top: 14px;
+    }
+    .price-confirm-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
+
+
+    /* =============================================
+       SUBMIT
+    ============================================= */
+    .btn-submit {
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, var(--green-800) 0%, var(--green-600) 100%);
+      color: #fff;
+      font-size: 17px;
+      font-weight: 800;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      letter-spacing: .01em;
+      transition: transform var(--ease), box-shadow var(--ease), opacity var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-submit::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(255,255,255,.08));
+      pointer-events: none;
+    }
+    .btn-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(45,106,79,.45);
+    }
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+    .btn-submit:disabled { opacity: .55; cursor: not-allowed; }
+
+    .submit-note {
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--gray-600);
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+
+    /* =============================================
+       SUCCESS SCREEN
+    ============================================= */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 52px 24px;
+    }
+    .success-check {
+      width: 76px;
+      height: 76px;
+      background: linear-gradient(135deg, var(--green-700), var(--green-400));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 22px;
+      box-shadow: 0 8px 24px rgba(45,106,79,.35);
+    }
+    .success-check svg { width: 36px; height: 36px; }
+    .success-screen h2 {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .success-screen p {
+      font-size: 16px;
+      color: var(--gray-600);
+      max-width: 380px;
+      margin: 0 auto;
+    }
+
+    /* =============================================
+       MISC
+    ============================================= */
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<header class="hero">
+  <div class="hero-decor hero-decor-1"></div>
+  <div class="hero-decor hero-decor-2"></div>
+
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5.5" stroke="#14321e" stroke-width="1"/><path d="M4 6l1.5 1.5L8 4" stroke="#14321e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Instant Quote
+  </div>
+  <h1>Lawn Care Booking</h1>
+  <p class="hero-sub">Get your price in seconds — no calls, no hassle.<br>We'll confirm your first visit within 24 hours.</p>
+  <div class="hero-pills">
+    <span class="hero-pill">&#10003; Licensed &amp; Insured</span>
+    <span class="hero-pill">&#127807; Locally Owned</span>
+    <span class="hero-pill">&#11088; 5-Star Rated</span>
+  </div>
+
+  <!-- Grass wave divider -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 48" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,24 C120,48 240,0 360,24 C480,48 600,0 720,24 C840,48 960,0 1080,24 C1200,48 1320,0 1440,24 L1440,48 L0,48 Z" fill="#f0f9f4"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ============================================================
+     PAGE WRAPPER
+============================================================ -->
+<div class="page-wrap">
+
+  <!-- ===================== FORM COLUMN ===================== -->
+  <div class="form-col">
+    <form id="bookingForm" novalidate>
+
+      <!-- Web2Forms hidden fields -->
+      <input type="hidden" name="access_key" value="REPLACE_WITH_CLIENT_WEB2FORMS_KEY"><!-- REPLACE WITH CLIENT WEB2FORMS KEY -->
+      <input type="hidden" name="subject" value="New Lawn Care Booking Request">
+      <input type="hidden" name="from_name" value="Lawn Care Booking Form">
+      <!-- Honeypot -->
+      <input type="checkbox" name="botcheck" style="display:none">
+
+      <!-- ─── STEP 1: YOUR INFO ─── -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-badge">1</div>
+          <div class="card-head-text">
+            <div class="card-title">Your Information</div>
+            <div class="card-sub">So we can confirm your appointment</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field">
+              <label for="fullName">Full Name<span class="req">*</span></label>
+              <input type="text" id="fullName" name="full_name" placeholder="Jane Smith" required autocomplete="name">
+            </div>
+            <div class="field">
+              <label for="phone">Phone Number<span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" required autocomplete="tel">
+            </div>
+            <div class="field">
+              <label for="email">Email Address<span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="jane@email.com" required autocomplete="email">
+            </div>
+            <div class="field">
+              <label for="address">Service Address<span class="req">*</span></label>
+              <input type="text" id="address" name="service_address" placeholder="123 Oak St, City, ST" required autocomplete="street-address">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── STEP 2: LOT SIZE ─── -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-badge">2</div>
+          <div class="card-head-text">
+            <div class="card-title">Lot Size</div>
+            <div class="card-sub">Determines your base service price</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sel-grid g2" id="lotGrid"></div>
+          <div class="xl-banner" id="xlBanner">
+            <span class="xl-banner-icon">&#128222;</span>
+            <div>Your property is larger than our online tiers. Please call us at <strong id="xlPhone"></strong> for a custom quote — we'd love to help!</div>
+          </div>
+          <input type="hidden" name="lot_size_label" id="hidLotLabel">
+        </div>
+      </div>
+
+      <!-- ─── STEP 3: SERVICE TYPE ─── -->
+      <div class="card" id="svcCard">
+        <div class="card-head">
+          <div class="step-badge">3</div>
+          <div class="card-head-text">
+            <div class="card-title">Service Type</div>
+            <div class="card-sub">Choose the package that fits your lawn</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sel-grid g3" id="svcGrid"></div>
+          <input type="hidden" name="service_type_label" id="hidSvcLabel">
+        </div>
+      </div>
+
+      <!-- ─── STEP 4: FREQUENCY ─── -->
+      <div class="card" id="freqCard">
+        <div class="card-head">
+          <div class="step-badge">4</div>
+          <div class="card-head-text">
+            <div class="card-title">Visit Frequency</div>
+            <div class="card-sub">Recurring visits come with a discount</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sel-grid g3" id="freqGrid"></div>
+          <input type="hidden" name="frequency_label" id="hidFreqLabel">
+        </div>
+      </div>
+
+      <!-- ─── STEP 5: ADD-ONS ─── -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-badge">5</div>
+          <div class="card-head-text">
+            <div class="card-title">Add-On Services</div>
+            <div class="card-sub">Optional upgrades — flat rate regardless of lot size</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="sel-grid g2" id="addonGrid"></div>
+          <input type="hidden" name="selected_addons" id="hidAddons">
+        </div>
+      </div>
+
+      <!-- ─── STEP 6: SCHEDULING ─── -->
+      <div class="card">
+        <div class="card-head">
+          <div class="step-badge">6</div>
+          <div class="card-head-text">
+            <div class="card-title">Scheduling &amp; Details</div>
+            <div class="card-sub">Almost done!</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="field-row">
+            <div class="field span2">
+              <label for="svcDate">Preferred First Service Date<span class="req">*</span></label>
+              <input type="date" id="svcDate" name="preferred_date" required>
+            </div>
+            <div class="field span2">
+              <label for="gateCode">Gate Code / Access Notes</label>
+              <input type="text" id="gateCode" name="gate_code_notes" placeholder="e.g., Gate code 1234 · dog in yard on Tuesdays">
+            </div>
+            <div class="field span2">
+              <label for="referral">How did you hear about us?</label>
+              <select id="referral" name="referral_source">
+                <option value="">Select one&hellip;</option>
+                <option value="Google">Google</option>
+                <option value="Nextdoor">Nextdoor</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Referral">Referral / Word of mouth</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="field span2">
+              <label for="notes">Additional Notes</label>
+              <textarea id="notes" name="additional_notes" placeholder="Anything else we should know about your property or preferences&hellip;"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── QUOTE SUMMARY ─── -->
+      <div class="price-panel" id="pricePanel">
+        <div class="price-head">
+          <div class="price-head-label">Your Quote</div>
+          <div class="price-amount muted" id="priceAmount">Select options above</div>
+          <div class="price-per-visit" id="pricePerVisit"></div>
+        </div>
+        <div class="price-body" id="priceBody">
+          <div class="price-placeholder" id="pricePlaceholder">
+            Make your selections to see a live price breakdown.
+          </div>
+          <div id="priceLines" class="hidden"></div>
+          <div class="price-confirm">
+            <span class="price-confirm-icon">&#128197;</span>
+            <span>We'll confirm your first visit within&nbsp;24&nbsp;hours. No payment collected online.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── SUBMIT ─── -->
+      <div class="card">
+        <div class="card-body">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Request My Booking &rarr;
+          </button>
+          <p class="submit-note">No payment collected online &nbsp;&middot;&nbsp; We'll confirm within 24 hours</p>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- SUCCESS SCREEN -->
+    <div class="success-screen hidden" id="successScreen">
+      <div class="success-check">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 18l7 7 13-13" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h2>Booking Request Sent!</h2>
+      <p>Thanks! We'll reach out within 24 hours to confirm your first visit. Check your inbox for a copy of your request.</p>
+    </div>
+
+  </div><!-- /form-col -->
+
+
+</div><!-- /page-wrap -->
+
+
+<script>
+/* ================================================================
+   CONFIG
+   All pricing and service options live here.
+   Edit these values to customize for each client.
+   ================================================================ */
+const CONFIG = {
+
+  /* Contact number shown in the "XL lot" call-for-quote notice */
+  phoneNumber: '(555) 555-5555',
+
+  /* LOT SIZES
+     priceKey: matches keys in service.prices  (null = call for quote tier)
+     icon: emoji shown on the card
+  */
+  lotSizes: [
+    {
+      key: 'small',
+      label: 'Small',
+      description: 'Under 5,000 sq ft',
+      icon: '🏡',
+      priceKey: 'small',   // active tier
+    },
+    {
+      key: 'medium',
+      label: 'Medium',
+      description: '5,000 – 10,000 sq ft',
+      icon: '🏠',
+      priceKey: 'medium',
+    },
+    {
+      key: 'large',
+      label: 'Large',
+      description: '10,000 – 20,000 sq ft',
+      icon: '🏘️',
+      priceKey: 'large',
+    },
+    {
+      key: 'xl',
+      label: 'XL',
+      description: 'Over 20,000 sq ft',
+      icon: '🏗️',
+      priceKey: null,      // null triggers "Call for Quote" UX
+    },
+  ],
+
+  /* SERVICES
+     prices: keyed by lotSize.priceKey
+     includes: bullet points shown on the card
+  */
+  services: [
+    {
+      key: 'mow_edge',
+      label: 'Mow & Edge',
+      description: 'Clean cut, crisp edges',
+      includes: ['Mowing', 'Edging'],
+      prices: {
+        small:  45,   // ← edit prices here
+        medium: 65,
+        large:  90,
+      },
+    },
+    {
+      key: 'mow_edge_blow',
+      label: 'Mow, Edge & Blow',
+      description: 'Plus full cleanup of clippings',
+      includes: ['Mowing', 'Edging', 'Blowing'],
+      prices: {
+        small:  55,
+        medium: 75,
+        large:  105,
+      },
+    },
+    {
+      key: 'full_maintenance',
+      label: 'Full Maintenance',
+      description: 'Complete care package',
+      includes: ['Mowing', 'Edging', 'Blowing', 'Weed Treatment'],
+      prices: {
+        small:  85,
+        medium: 115,
+        large:  150,
+      },
+    },
+  ],
+
+  /* FREQUENCY
+     multiplier: applied to base price  (1.0 = no discount)
+     saveLabel:  badge text  (null = no badge)
+  */
+  frequencies: [
+    {
+      key: 'one_time',
+      label: 'One-Time',
+      sublabel: 'Single visit',
+      multiplier: 1.00,
+      saveLabel: null,
+    },
+    {
+      key: 'biweekly',
+      label: 'Bi-Weekly',
+      sublabel: 'Every 2 weeks',
+      multiplier: 0.90,       // ← 10% off
+      saveLabel: 'Save 10%',
+    },
+    {
+      key: 'weekly',
+      label: 'Weekly',
+      sublabel: 'Every week',
+      multiplier: 0.82,       // ← 18% off
+      saveLabel: 'Save 18%',
+    },
+  ],
+
+  /* ADD-ONS — flat price, any lot size */
+  addons: [
+    { key: 'leaf_removal',   label: 'Leaf Removal',          icon: '🍂', price: 50 },
+    { key: 'hedge_trimming', label: 'Hedge/Shrub Trimming',  icon: '✂️',  price: 65 },
+    { key: 'fertilizer',     label: 'Fertilizer Treatment',  icon: '🌱', price: 45 },
+    { key: 'aeration',       label: 'Aeration',              icon: '🔵', price: 80 },
+  ],
+};
+/* ================================================================
+   END CONFIG
+   ================================================================ */
+
+
+/* ──────────────────────────────
+   STATE
+────────────────────────────── */
+const state = {
+  lotKey:    null,   // key of selected lot size
+  svcKey:    null,   // key of selected service
+  freqKey:   'one_time', // default
+  addons:    new Set(),
+};
+
+
+/* ──────────────────────────────
+   HELPERS
+────────────────────────────── */
+const $  = (id) => document.getElementById(id);
+const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+const fmt = (n) => '$' + Math.round(n).toLocaleString();
+
+function lotConfig()  { return CONFIG.lotSizes.find(l => l.key === state.lotKey); }
+function svcConfig()  { return CONFIG.services.find(s => s.key === state.svcKey); }
+function freqConfig() { return CONFIG.frequencies.find(f => f.key === state.freqKey); }
+
+
+/* ──────────────────────────────
+   BUILD: LOT SIZE GRID
+────────────────────────────── */
+function buildLots() {
+  const grid = $('lotGrid');
+  CONFIG.lotSizes.forEach(lot => {
+    const isXL = lot.priceKey === null;
+    const lbl = document.createElement('label');
+    lbl.className = 'sel-card';
+    lbl.innerHTML = `
+      <input type="radio" name="lot_size" value="${lot.key}" aria-label="${lot.label}">
+      <div class="sel-face">
+        <div class="sel-dot">✓</div>
+        <div style="font-size:24px;margin-bottom:5px">${lot.icon}</div>
+        <div class="sel-label">${lot.label}</div>
+        <div class="sel-desc">${lot.description}</div>
+        ${isXL ? `<span class="call-badge">📞 Call for Quote</span>` : ''}
+      </div>`;
+
+    lbl.querySelector('input').addEventListener('change', () => {
+      state.lotKey = lot.key;
+      state.svcKey = null;
+      $$('[name="service_type"]').forEach(i => i.checked = false);
+      $('xlBanner').classList.toggle('show', isXL);
+      $('hidLotLabel').value = lot.label;
+      updateSvcPrices();
+      updatePrice();
+    });
+    grid.appendChild(lbl);
+  });
+
+  $('xlPhone').textContent = CONFIG.phoneNumber;
+}
+
+
+/* ──────────────────────────────
+   BUILD: SERVICE GRID
+────────────────────────────── */
+function buildServices() {
+  const grid = $('svcGrid');
+  CONFIG.services.forEach(svc => {
+    const lbl = document.createElement('label');
+    lbl.className = 'sel-card';
+    lbl.dataset.svcKey = svc.key;
+    lbl.innerHTML = `
+      <input type="radio" name="service_type" value="${svc.key}" aria-label="${svc.label}">
+      <div class="sel-face">
+        <div class="sel-dot">✓</div>
+        <div class="sel-label">${svc.label}</div>
+        <div class="sel-desc">${svc.description}</div>
+        <ul class="svc-includes">
+          ${svc.includes.map(i => `<li>${i}</li>`).join('')}
+        </ul>
+        <div class="sel-price" data-svc="${svc.key}">
+          <span class="sel-price-note">Select lot size</span>
+        </div>
+      </div>`;
+
+    lbl.querySelector('input').addEventListener('change', () => {
+      state.svcKey = svc.key;
+      $('hidSvcLabel').value = svc.label;
+      updatePrice();
+    });
+    grid.appendChild(lbl);
+  });
+}
+
+function updateSvcPrices() {
+  const lot = lotConfig();
+  CONFIG.services.forEach(svc => {
+    const priceEl = $('svcGrid').querySelector(`[data-svc="${svc.key}"]`);
+    const input   = $('svcGrid').querySelector(`[data-svc-key="${svc.key}"] input`) ||
+                    $$('[name="service_type"]').find(i => i.value === svc.key);
+    if (!priceEl) return;
+
+    if (lot && lot.priceKey) {
+      const p = svc.prices[lot.priceKey];
+      priceEl.innerHTML = `${fmt(p)} <span class="sel-price-note">/ visit</span>`;
+      if (input) input.disabled = false;
+    } else if (!lot) {
+      priceEl.innerHTML = `<span class="sel-price-note">Select lot size first</span>`;
+    } else {
+      // XL — disable
+      priceEl.innerHTML = `<span class="sel-price-note">—</span>`;
+      if (input) { input.disabled = true; input.checked = false; }
+    }
+  });
+}
+
+
+/* ──────────────────────────────
+   BUILD: FREQUENCY GRID
+────────────────────────────── */
+function buildFrequencies() {
+  const grid = $('freqGrid');
+  CONFIG.frequencies.forEach(freq => {
+    const lbl = document.createElement('label');
+    lbl.className = 'sel-card';
+    const checked = freq.key === 'one_time' ? 'checked' : '';
+    lbl.innerHTML = `
+      <input type="radio" name="frequency" value="${freq.key}" ${checked} aria-label="${freq.label}">
+      <div class="sel-face freq-face">
+        <div class="sel-dot">✓</div>
+        <div class="sel-label">${freq.label}</div>
+        <div class="sel-desc">${freq.sublabel}</div>
+        ${freq.saveLabel ? `<span class="save-badge">${freq.saveLabel}</span>` : ''}
+      </div>`;
+
+    lbl.querySelector('input').addEventListener('change', () => {
+      state.freqKey = freq.key;
+      $('hidFreqLabel').value = freq.label;
+      updatePrice();
+    });
+    grid.appendChild(lbl);
+  });
+
+  // Set initial hidden value
+  $('hidFreqLabel').value = 'One-Time';
+}
+
+
+/* ──────────────────────────────
+   BUILD: ADDON GRID
+────────────────────────────── */
+function buildAddons() {
+  const grid = $('addonGrid');
+  CONFIG.addons.forEach(addon => {
+    const lbl = document.createElement('label');
+    lbl.className = 'sel-card checkbox';
+    lbl.innerHTML = `
+      <input type="checkbox" name="addon_${addon.key}" value="${addon.key}" aria-label="${addon.label}">
+      <div class="sel-face addon-face">
+        <div class="sel-dot" style="border-radius:5px">✓</div>
+        <span class="addon-icon">${addon.icon}</span>
+        <div class="addon-info">
+          <div class="sel-label">${addon.label}</div>
+        </div>
+        <span class="addon-price">+${fmt(addon.price)}</span>
+      </div>`;
+
+    lbl.querySelector('input').addEventListener('change', (e) => {
+      if (e.target.checked) state.addons.add(addon.key);
+      else                   state.addons.delete(addon.key);
+      updatePrice();
+      syncHiddenAddons();
+    });
+    grid.appendChild(lbl);
+  });
+}
+
+function syncHiddenAddons() {
+  const labels = [...state.addons].map(k => CONFIG.addons.find(a => a.key === k)?.label).filter(Boolean);
+  $('hidAddons').value = labels.join(', ') || 'None';
+}
+
+
+/* ──────────────────────────────
+   PRICE CALCULATION
+────────────────────────────── */
+function calcPrice() {
+  const lot  = lotConfig();
+  const svc  = svcConfig();
+  const freq = freqConfig();
+
+  if (!lot || !lot.priceKey || !svc || !freq) return null;
+
+  const base        = svc.prices[lot.priceKey];
+  const discounted  = base * freq.multiplier;
+  const discAmt     = base - discounted;
+
+  const addonDetails = [];
+  let addonTotal = 0;
+  state.addons.forEach(key => {
+    const a = CONFIG.addons.find(x => x.key === key);
+    if (a) { addonTotal += a.price; addonDetails.push(a); }
+  });
+
+  return {
+    base, discounted, discAmt, freq, addonTotal, addonDetails,
+    total: discounted + addonTotal,
+    isRecurring: state.freqKey !== 'one_time',
+  };
+}
+
+
+/* ──────────────────────────────
+   UPDATE PRICE PANEL
+────────────────────────────── */
+function updatePrice() {
+  const c = calcPrice();
+  const amountEl    = $('priceAmount');
+  const perVisitEl  = $('pricePerVisit');
+  const placeholder = $('pricePlaceholder');
+  const priceLines  = $('priceLines');
+  if (!c) {
+    // No calculable price yet
+    const lot = lotConfig();
+    if (lot && lot.priceKey === null) {
+      amountEl.textContent = 'Call for Quote';
+    } else {
+      amountEl.textContent = 'Select options above';
+    }
+    amountEl.className = 'price-amount muted';
+    perVisitEl.textContent = '';
+    placeholder.classList.remove('hidden');
+    priceLines.classList.add('hidden');
+    return;
+  }
+
+  // Display total
+  amountEl.textContent = fmt(c.total);
+  amountEl.className   = 'price-amount';
+
+  perVisitEl.textContent = c.isRecurring
+    ? `${fmt(c.total)} per visit · ${freqConfig().sublabel}`
+    : '';
+
+  // Build breakdown lines
+  placeholder.classList.add('hidden');
+  priceLines.classList.remove('hidden');
+
+  const lines = [];
+  const svc   = svcConfig();
+
+  lines.push({ label: svc.label + ' (' + lotConfig().label + ')', val: fmt(c.base), cls: '' });
+
+  if (c.discAmt > 0) {
+    lines.push({ label: freqConfig().label + ' discount', val: '−' + fmt(c.discAmt), cls: 'disc' });
+  }
+
+  c.addonDetails.forEach(a => {
+    lines.push({ label: a.label, val: '+' + fmt(a.price), cls: 'add' });
+  });
+
+  priceLines.innerHTML = lines.map(l => `
+    <div class="price-line">
+      <span class="pl-label">${l.label}</span>
+      <span class="pl-val ${l.cls}">${l.val}</span>
+    </div>`).join('') + `
+    <div class="price-divider"></div>
+    <div class="price-line">
+      <span class="pl-label" style="font-weight:700;color:var(--text)">Total${c.isRecurring ? ' / visit' : ''}</span>
+      <span class="pl-val" style="font-size:16px">${fmt(c.total)}</span>
+    </div>`;
+
+}
+
+
+
+
+/* ──────────────────────────────
+   VALIDATION
+────────────────────────────── */
+function clearErrors() {
+  $$('.field-err').forEach(e => e.remove());
+  $$('.err').forEach(e => e.classList.remove('err'));
+}
+
+function addErr(el, msg) {
+  el.classList.add('err');
+  const d = document.createElement('div');
+  d.className = 'field-err';
+  d.textContent = msg;
+  el.insertAdjacentElement('afterend', d);
+}
+
+function validate() {
+  clearErrors();
+  let ok = true;
+
+  // Required text inputs
+  [$('fullName'), $('phone'), $('email'), $('address'), $('svcDate')].forEach(inp => {
+    if (!inp.value.trim()) { addErr(inp, 'This field is required.'); ok = false; }
+  });
+
+  // Lot size
+  const lotChecked = $$('[name="lot_size"]').some(r => r.checked);
+  if (!lotChecked) {
+    const gridEl = $('lotGrid');
+    const d = document.createElement('div');
+    d.className = 'field-err';
+    d.textContent = 'Please select a lot size.';
+    gridEl.insertAdjacentElement('afterend', d);
+    ok = false;
+  }
+
+  // Service (only when lot is not XL)
+  const lot = lotConfig();
+  if (lot && lot.priceKey !== null) {
+    const svcChecked = $$('[name="service_type"]').some(r => r.checked);
+    if (!svcChecked) {
+      const gridEl = $('svcGrid');
+      const d = document.createElement('div');
+      d.className = 'field-err';
+      d.textContent = 'Please select a service type.';
+      gridEl.insertAdjacentElement('afterend', d);
+      ok = false;
+    }
+  }
+
+  return ok;
+}
+
+
+/* ──────────────────────────────
+   FORM SUBMISSION
+────────────────────────────── */
+$('bookingForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErrors();
+  if (!validate()) {
+    const firstErr = document.querySelector('.err, .field-err');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = $('submitBtn');
+  btn.disabled    = true;
+  btn.textContent = 'Sending…';
+
+  // Append a human-readable quote summary for the email
+  const c   = calcPrice();
+  const svc = svcConfig();
+  const lot = lotConfig();
+  const frq = freqConfig();
+  const summaryVal = c
+    ? `TOTAL: ${fmt(c.total)}${c.isRecurring ? '/visit' : ''} | Service: ${svc.label} | Lot: ${lot.label} | Freq: ${frq.label}${c.addonDetails.length ? ' | Add-ons: ' + c.addonDetails.map(a => a.label).join(', ') : ''}`
+    : `XL lot — call for quote | Lot: ${lot?.label || '—'}`;
+
+  const hidSummary = document.createElement('input');
+  hidSummary.type  = 'hidden';
+  hidSummary.name  = 'quote_summary';
+  hidSummary.value = summaryVal;
+  $('bookingForm').appendChild(hidSummary);
+
+  try {
+    const resp = await fetch('https://api.web2forms.com/submit', {
+      method: 'POST',
+      body:   new FormData($('bookingForm')),
+    });
+    const json = await resp.json();
+
+    if (json.success) {
+      $('bookingForm').style.display      = 'none';
+      $('successScreen').classList.remove('hidden');
+      $('mobilePriceBar').classList.remove('show');
+      document.body.classList.remove('has-mobile-bar');
+      $('successScreen').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      throw new Error(json.message || 'Submission error');
+    }
+  } catch {
+    btn.disabled    = false;
+    btn.textContent = 'Request My Booking →';
+    hidSummary.remove();
+    alert('Something went wrong. Please try again or call us at ' + CONFIG.phoneNumber);
+  }
+});
+
+
+/* ──────────────────────────────
+   INIT
+────────────────────────────── */
+(function init() {
+  buildLots();
+  buildServices();
+  buildFrequencies();
+  buildAddons();
+  updateSvcPrices();
+  updatePrice();
+
+  // Set min date to tomorrow
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  $('svcDate').min = d.toISOString().split('T')[0];
+})();
+</script>
+</body>
+</html>
